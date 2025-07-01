@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>YouTube Video Stats</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="top-bar">
+        <h2>📊 YouTube Views Analyzer</h2>
+        <label class="dark-mode-toggle">
+            🌙
+            <input type="checkbox" id="darkToggle">
+        </label>
+    </div>
+    <form method="post">
+        <input name="url" type="text" placeholder="Paste YouTube URL..." required>
+        <br>
+        <button type="submit">Get Stats</button>
+    </form>
+    {% if video %}
+    <hr>
+    <div class="card">
+        <h3>{{ video.title }}</h3>
+        <img src="{{ video.thumbnail }}" alt="Video Thumbnail">
+        <p class="channel">📺 <b>Channel:</b> {{ video.channel }}</p>
+        <p class="subs">🔔 <b>Subscribers:</b> <span class="count" data-count="{{ video.subscribers }}">{{ video.subscribers }}</span></p>
+        <p class="views">👀 <b>Views:</b> <span class="count" data-count="{{ video.views }}">{{ video.views }}</span>
+            {% if video.views|int > 1000000 %}
+                <span class="trending">🔥 Trending</span>
+            {% endif %}
+        </p>
+        <p class="likes">👍 <b>Likes:</b> <span class="count" data-count="{{ video.likes }}">{{ video.likes }}</span></p>
+        <p class="published">📅 <b>Published:</b> {{ video.published }}</p>
+        <button onclick="copyLink()">📤 Copy Link</button>
+    </div>
+    <canvas id="viewChart" width="400" height="200"></canvas>
+    {% endif %}
+    <script>
+        const counts = document.querySelectorAll('.count');
+        counts.forEach(count => {
+            const target = +count.dataset.count;
+            let num = 0;
+            const speed = 20;
+            const update = () => {
+                const step = Math.ceil(target / speed);
+                num += step;
+                if (num >= target) {
+                    count.innerText = target.toLocaleString();
+                } else {
+                    count.innerText = num.toLocaleString();
+                    requestAnimationFrame(update);
+                }
+            };
+            update();
+        });
+        const toggle = document.getElementById('darkToggle');
+        toggle.addEventListener('change', () => {
+            document.body.classList.toggle('dark-mode');
+        });
+        function copyLink() {
+            const link = "{{ request.form.get('url') if request.form.get('url') else '' }}";
+            if (!link) return;
+            navigator.clipboard.writeText(link).then(() => {
+                alert('Video URL copied to clipboard!');
+            });
+        }
+        const ctx = document.getElementById('viewChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Today'],
+                    datasets: [{
+                        label: 'Views over time (simulated)',
+                        data: [1000, 3000, 8000, 20000, 40000, 70000, {{ video.views|int if video else 0 }}],
+                        borderColor: '#e62117',
+                        backgroundColor: 'rgba(230, 33, 23, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                }
+            });
+        }
+    </script>
+</body>
+</html>

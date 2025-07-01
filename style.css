@@ -1,0 +1,73 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to bottom right, #ffffff, #f2f2f2);
+    color: #333;
+    text-align: center;
+    padding: 30px;
+    margin: 0;
+}
+.dark-mode {
+    background-color: #121212;
+    color: white;
+}
+h2 {
+    font-size: 32px;
+    color: #e62117;
+    margin-bottom: 20px;
+}
+form {
+    margin-bottom: 40px;
+}
+input[type="text"] {
+    padding: 12px;
+    width: 320px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+}
+button {
+    padding: 12px 25px;
+    margin-top: 10px;
+    background-color: #e62117;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #c41411;
+}
+.card {
+    background-color: white;
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+.dark-mode .card {
+    background-color: #1f1f1f;
+}
+.card img {
+    border-radius: 10px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+p {
+    font-size: 18px;
+    margin: 8px 0;
+    text-align: left;
+    padding-left: 30px;
+}
+p.channel::before { content: '📺'; }
+p.subs::before { content: '🔔'; }
+p.views::before { content: '👀'; }
+p.likes::before { content: '👍'; }
+p.published::before { content: '📅'; }
+.trending {
+    color: red;
+    font-weight: bold;
+    margin-left: 10px;
+}
